@@ -62,7 +62,7 @@ public class EchoController {
 		response.set(JsonPayload.BODY, rawBody != null ? Base64.getEncoder().encodeToString(rawBody) : null);
 		LOG.info("REQUEST: {}", request.getParameterMap());
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 
