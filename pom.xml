@@ -23,10 +23,12 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<spring.boot.version>2.6.7</spring.boot.version>
-		<docker.registry>ghcr.io/</docker.registry>
-		<docker.project.id>raonigabriel/${project.artifactId}</docker.project.id>
+		<docker.registry>docker.io/</docker.registry>
+		<docker.project.id>victorpupim/${serviceName}</docker.project.id>
 		<docker.image.tag>${project.version}</docker.image.tag>
 		<docker.image.name>${docker.registry}${docker.project.id}</docker.image.name>
+		<project.serviceName>${serviceName}</project.serviceName>
+		<project.cluster>${cluster}</project.cluster>
 	</properties>
 
 <dependencyManagement>
@@ -58,6 +60,13 @@
 	        <artifactId>spring-cloud-starter-sleuth</artifactId>
        		<version>3.1.3</version>
        </dependency>
+
+	   <!-- https://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.1</version>
+		</dependency>
 		<!-- use Jetty instead of default Tomcat -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -97,7 +106,25 @@
 	
 	
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<delimiters>
+						<delimiter>@</delimiter>
+					</delimiters>
+					<useDefaultDelimiters>false</useDefaultDelimiters>
+				</configuration>
+			</plugin>
 			<!--  Compilation options -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

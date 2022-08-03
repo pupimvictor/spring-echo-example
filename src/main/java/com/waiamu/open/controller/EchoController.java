@@ -15,6 +15,9 @@
  */
 package com.waiamu.open.controller;
 
+
+import java.io.IOException;
+
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
@@ -34,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+
 import com.waiamu.open.dto.JsonPayload;
 
 @Controller
@@ -44,13 +50,28 @@ public class EchoController {
 	@Autowired
 	private HttpServletRequest request;
 
+
 	@RequestMapping(value = "/**", consumes = MediaType.ALL_VALUE, produces = 
 		MediaType.APPLICATION_JSON_VALUE, method = {RequestMethod.GET, RequestMethod.POST,
 		RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
-	public ResponseEntity<JsonPayload> echoBack(@RequestBody(required = false) byte[] rawBody) {
+	public ResponseEntity<JsonPayload> echoBack(@RequestBody(required = false) byte[] rawBody) throws IOException, InterruptedException {
+		long start = System.currentTimeMillis();
 
 		final Map<String, String> headers  = Collections.list(request.getHeaderNames()).stream()
 			.collect(Collectors.toMap(Function.identity(), request::getHeader));
+
+		final JsonPayload response = buildPayload(request, headers);
+		
+		long finish = System.currentTimeMillis();
+		long timeElapsed = finish - start;
+
+		response.set(JsonPayload.BODY, rawBody != null ? Base64.getEncoder().encodeToString(rawBody) + "\n time elapsed: " + timeElapsed: null);
+
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
+	public JsonPayload buildPayload(HttpServletRequest request, Map<String, String> headers) throws IOException, InterruptedException {
 
 		final JsonPayload response = new JsonPayload();
 		response.set(JsonPayload.PROTOCOL, request.getProtocol());
@@ -59,11 +80,20 @@ public class EchoController {
 		response.set(JsonPayload.COOKIES, request.getCookies());
 		response.set(JsonPayload.PARAMETERS, request.getParameterMap());
 		response.set(JsonPayload.PATH, request.getServletPath());
-		response.set(JsonPayload.BODY, rawBody != null ? Base64.getEncoder().encodeToString(rawBody) : null);
 		LOG.info("REQUEST: {}", request.getParameterMap());
 
-		return ResponseEntity.status(HttpStatus.OK).body(response);
+
+		if (request.getMethod() == "POST") {
+			 System.out.println("poooost" + request.getMethod());
+			 
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<String> myResponse = restTemplate.getForEntity("http://echo-spring-backend.backend/hello", String.class);
+			System.out.println(myResponse.toString());
+			response.set(JsonPayload.BODY, "backended");
+		}
+		
+		return response;
 	}
-	
+
 
 }
