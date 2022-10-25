@@ -1,0 +1,9 @@
+resources:
+- ../base
+
+commonLabels:
+  env: development
+
+images:
+- name: victorpupim/echo-spring-backend
+  newTag: latest

@@ -1,0 +1,19 @@
+resources:
+- ../base
+- hpa.yaml
+
+commonLabels:
+  env: prod
+
+images:
+- name: victorpupim/echo-spring-backend
+  newTag: 1.1.1
+
+replicas:
+- name: echo-spring
+  count: 3
+- name: echo-spring-backend
+  count: 3
+
+patchesStrategicMerge:
+ - resources.yaml

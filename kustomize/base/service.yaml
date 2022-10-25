@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    service: echo-spring
+    app: echo-spring
+  name: echo-spring
+  namespace: web
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    service: echo-spring
+    app: echo-spring
+  type: NodePort
+status:
+  loadBalancer: {}
