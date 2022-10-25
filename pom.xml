@@ -5,7 +5,7 @@
 
 	<groupId>com.waiamu.open</groupId>
 	<artifactId>spring-echo-example</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 
 	<name>spring-echo-example</name>
 	<description>Spring Boot Echo Example</description>
