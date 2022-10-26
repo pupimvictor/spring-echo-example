@@ -3,3 +3,4 @@ resources:
 - service.yaml
 - be-deployment.yaml
 - be-service.yaml
+- ingress.yaml

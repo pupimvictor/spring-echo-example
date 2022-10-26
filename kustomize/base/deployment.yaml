@@ -1,14 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     service: echo-spring
     app: echo-spring
   name: echo-spring
   namespace: web
 spec:
-  replicas: 2
   selector:
     matchLabels:
       service: echo-spring
@@ -16,7 +14,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         service: echo-spring
         app: echo-spring
@@ -24,11 +21,4 @@ spec:
       containers:
       - image: victorpupim/echo-spring:latest
         name: echo-spring
-        resources:
-          requests:
-            memory: "2Gi"
-            cpu: "2.0"
-          limits:
-            memory: "3.5Gi"
-            cpu: "3.5"
-status: {}
+

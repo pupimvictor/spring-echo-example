@@ -6,6 +6,8 @@ commonLabels:
   env: prod
 
 images:
+- name: victorpupim/echo-spring
+  newTag: 1.1.1
 - name: victorpupim/echo-spring-backend
   newTag: 1.1.1
 
@@ -15,5 +17,19 @@ replicas:
 - name: echo-spring-backend
   count: 3
 
-patchesStrategicMerge:
- - resources.yaml
+patches:
+- path: routes.yaml
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: echo-spring-ingress
+    namespace: web
+
+- path: resources.yaml
+  target:
+    group: apps
+    version: v1
+    kind: Deployment
+    
+
