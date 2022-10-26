@@ -10,7 +10,7 @@ spec:
   rules: []
   tls:
   - hosts:
-    - "*.dev-cluster.h2o-2-1565.h2o.vmware.com"
+    - "echo.dev-cluster.h2o-2-1565.h2o.vmware.com"
     secretName: dev-cluster-ca-cert
 status:
   loadBalancer: {}
