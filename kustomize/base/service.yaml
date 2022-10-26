@@ -9,12 +9,12 @@ metadata:
   namespace: web
 spec:
   ports:
-  - port: 80
+  - port: 443
     protocol: TCP
     targetPort: 8080
   selector:
     service: echo-spring
     app: echo-spring
-  type: NodePort
+  type: ClusterIP
 status:
   loadBalancer: {}
