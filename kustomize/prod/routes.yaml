@@ -11,3 +11,11 @@
               number: 443
         path: /echo-spring
         pathType: Prefix
+
+- op: add
+  path: /spec/tls
+  value:
+    - hosts:
+      - "echo.dev-cluster.h2o-2-1565.h2o.vmware.com"
+      secretName: dev-cluster-ca-cert
+  
