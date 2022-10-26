@@ -7,3 +7,25 @@ commonLabels:
 images:
 - name: victorpupim/echo-spring-backend
   newTag: latest
+
+  - op: add
+  path: /spec/rules/-
+  value:
+    host: echo.dev.h2o-2-1565.h2o.vmware.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: echo-spring
+            port:
+              number: 443
+        path: /echo-spring
+        pathType: Prefix
+
+- op: add
+  path: /spec/tls
+  value:
+    - hosts:
+      - "echo.dev.h2o-2-1565.h2o.vmware.com"
+      secretName: dev-cluster-ca-cert
+  
