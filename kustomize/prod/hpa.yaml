@@ -24,4 +24,4 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: echo-spring-backend
-  targetCPUUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 70
