@@ -10,6 +10,7 @@ metadata:
 spec:
   ports:
   - port: 443
+    name: https
     protocol: TCP
     targetPort: 8080
   selector:
