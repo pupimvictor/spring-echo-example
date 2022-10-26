@@ -7,9 +7,9 @@ commonLabels:
 
 images:
 - name: victorpupim/echo-spring
-  newTag: 1.1.1
+  newTag: 1.1.2
 - name: victorpupim/echo-spring-backend
-  newTag: 1.1.1
+  newTag: 1.1.2
 
 replicas:
 - name: echo-spring
