@@ -10,18 +10,19 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: echo-spring
-  metrics:
-  - type: Object
-    object:
-      metric:
-        name: requests-per-second
-      describedObject:
-        apiVersion: networking.k8s.io/v1
-        kind: Ingress
-        name: echo-spring-ingress
-      target:
-        type: Value
-        value: 1k
+  targetCPUUtilizationPercentage: 70
+  # metrics:
+  # - type: Object
+  #   object:
+  #     metric:
+  #       name: requests-per-second
+  #     describedObject:
+  #       apiVersion: networking.k8s.io/v1
+  #       kind: Ingress
+  #       name: echo-spring-ingress
+  #     target:
+  #       type: Value
+  #       value: 1k
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
