@@ -12,7 +12,7 @@ spec:
   - port: 443
     name: https
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
   selector:
     service: echo-spring
     app: echo-spring
