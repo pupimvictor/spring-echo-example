@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: dev
+  name: echo-web
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -11,7 +11,7 @@ metadata:
     service: echo-spring
     app: echo-spring
   name: echo-spring
-  namespace: dev
+  namespace: echo-web
 spec:
   replicas: 2
   selector:
@@ -46,7 +46,7 @@ metadata:
     service: echo-spring
     app: echo-spring
   name: echo-spring
-  namespace: dev
+  namespace: echo-web
 spec:
   ports:
   - port: 80

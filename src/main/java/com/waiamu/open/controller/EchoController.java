@@ -87,7 +87,7 @@ public class EchoController {
 			 System.out.println("poooost" + request.getMethod());
 			 
 			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<String> myResponse = restTemplate.getForEntity("http://echo-spring-backend.backend/hello", String.class);
+			ResponseEntity<String> myResponse = restTemplate.getForEntity("http://echo-spring-backend.echo-backend/hello", String.class);
 			System.out.println(myResponse.toString());
 			response.set(JsonPayload.BODY, "backended");
 		}
