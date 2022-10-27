@@ -183,7 +183,7 @@ spec:
     name: echo-spring-backend
   targetCPUUtilizationPercentage: 70
 ---
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
@@ -192,12 +192,23 @@ metadata:
   namespace: web
 spec:
   maxReplicas: 10
+  metrics:
+  - object:
+      describedObject:
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        name: echo-spring-ingress
+      metric:
+        name: requests-per-second
+      target:
+        type: Value
+        value: 1k
+    type: Object
   minReplicas: 3
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: echo-spring
-  targetCPUUtilizationPercentage: 70
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
