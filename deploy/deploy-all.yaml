@@ -1,0 +1,229 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: echo-spring-backend
+    env: prod
+    service: echo-spring-backend
+  name: echo-spring-backend
+  namespace: backend
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: echo-spring-backend
+    env: prod
+    service: echo-spring-backend
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: echo-spring
+    env: prod
+    service: echo-spring
+  name: echo-spring
+  namespace: web
+spec:
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: echo-spring
+    env: prod
+    service: echo-spring
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: echo-spring-backend
+    env: prod
+    service: echo-spring-backend
+  name: echo-spring-backend
+  namespace: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: echo-spring-backend
+      env: prod
+      service: echo-spring-backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 2
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: echo-spring-backend
+        env: prod
+        service: echo-spring-backend
+    spec:
+      containers:
+      - image: victorpupim/echo-spring-backend:1.1.2
+        livenessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        name: echo-spring-backend
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2Gi
+          requests:
+            cpu: 250m
+            memory: 64Mi
+        startupProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /healthz
+            port: 8080
+          periodSeconds: 10
+status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: echo-spring
+    env: prod
+    service: echo-spring
+  name: echo-spring
+  namespace: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: echo-spring
+      env: prod
+      service: echo-spring
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: echo-spring
+        env: prod
+        service: echo-spring
+    spec:
+      containers:
+      - image: victorpupim/echo-spring:1.1.2
+        livenessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        name: echo-spring
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2Gi
+          requests:
+            cpu: 250m
+            memory: 64Mi
+        startupProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /healthz
+            port: 8080
+          periodSeconds: 10
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    env: prod
+  name: echo-spring-backend
+  namespace: backend
+spec:
+  maxReplicas: 4
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: echo-spring-backend
+  targetCPUUtilizationPercentage: 70
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    env: prod
+  name: echo-spring
+  namespace: web
+spec:
+  maxReplicas: 10
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: echo-spring
+  targetCPUUtilizationPercentage: 70
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+  labels:
+    env: prod
+  name: echo-spring-ingress
+  namespace: web
+spec:
+  ingressClassName: contour
+  rules:
+  - host: echo.dev-cluster.h2o-2-1565.h2o.vmware.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: echo-spring
+            port:
+              number: 443
+        path: /echo-spring
+        pathType: Prefix
+  tls:
+  - hosts:
+    - echo.dev-cluster.h2o-2-1565.h2o.vmware.com
+    secretName: dev-cluster-ca-cert
+status:
+  loadBalancer: {}
