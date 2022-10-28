@@ -2,7 +2,7 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: echo-spring
-  namespace: web
+  namespace: echo-web
 spec:
   maxReplicas: 20
   minReplicas: 1
@@ -16,7 +16,7 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: echo-spring-backend
-  namespace: backend
+  namespace: echo-backend
 spec:
   maxReplicas: 20
   minReplicas: 1
