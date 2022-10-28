@@ -4,24 +4,13 @@ metadata:
   name: echo-spring
   namespace: web
 spec:
-  maxReplicas: 10
-  minReplicas: 3
+  maxReplicas: 20
+  minReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: echo-spring
-  metrics:
-  - type: Object
-    object:
-      metric:
-        name: requests-per-second
-      describedObject:
-        apiVersion: networking.k8s.io/v1
-        kind: Ingress
-        name: echo-spring-ingress
-      target:
-        type: Value
-        value: 1k
+  targetCPUUtilizationPercentage: 70
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
